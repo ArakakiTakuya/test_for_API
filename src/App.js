@@ -63,23 +63,19 @@ function App() {
       headers: {
         "content-type": "application/octet-stream",
         "x-rapidapi-host": "tripadvisor1.p.rapidapi.com",
-        "x-rapidapi-key": "YOUR_API_KEY",
+        "x-rapidapi-key": "YOUR_API_KEY", // APIキーを入力。
         useQueryString: true,
       },
       params: {
-        location_id: "1",
         limit: "30",
-        sort: "relevance",
         offset: "0", //どこからどこまでか。今は0~29
         lang: "ja_JP",
-        currency: "USD",
-        units: "km",
         query: prefecture[0], //都道府県名を入力
       },
     });
 
     const data = res.data.data
-      .filter((obj) => obj.result_type === "things_to_do")
+      .filter((obj) => obj.result_type === "things_to_do") //ここでフィルター。今は観光スポットが取れてる。lodgingでホテル。restaurantsでレストラン情報が取れる。
       .map((obj) => {
         return {
           name: obj.result_object.name,
@@ -90,10 +86,11 @@ function App() {
           image: obj.result_object.photo["images"]["small"]["url"],
           category: obj.result_object.category["name"],
           rating: obj.result_object.rating,
-          review: obj.review_snippet["snippet"], // 観光地説明のようなもの。
+          //review: obj.review_snippet["snippet"], // 観光地説明のようなもの。これがある県とない県があるため今はコメントアウト中。
         };
       });
 
+    console.log(data);
     console.log(JSON.stringify(data));
   }
 
